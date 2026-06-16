@@ -20,7 +20,16 @@ npm install
 npm run dev      # start dev server
 npm run build    # type-check + production build (dist/)
 npm run preview  # preview the production build
+npm run deploy   # build + publish to the gh-pages branch
 ```
+
+## Deployment
+
+Hosted on GitHub Pages from the `gh-pages` branch at
+<https://hitomi1.github.io/fdc-tracker/>. The app is served from the
+`/fdc-tracker/` subpath (set via `base` in `vite.config.ts`).
+
+Run `npm run deploy` to build and publish the latest `dist/` to `gh-pages`.
 
 ## Project structure
 
