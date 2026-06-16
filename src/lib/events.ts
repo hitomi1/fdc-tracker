@@ -6,7 +6,7 @@ export type ResultKind = 'trophy' | 'win' | 'loss';
 
 export function isTrophy(event: DraftEvent): boolean {
   const needed = TROPHY_WINS[event.format] ?? 7;
-  return event.wins >= needed && event.losses === 0;
+  return event.wins >= needed;
 }
 
 export function resultLabel(event: DraftEvent): ResultKind {
