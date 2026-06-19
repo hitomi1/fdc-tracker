@@ -18,7 +18,7 @@ const TABS: { id: Tab; label: string }[] = [
 ];
 
 export default function App() {
-  const { events, addEvent, updateEvent, deleteEvent } = useEvents();
+  const { events, isSample, addEvent, updateEvent, deleteEvent, freshStart } = useEvents();
   const { toasts, showToast } = useToasts();
 
   const [filters, setFilters] = useState<Filters>({ format: '', set: '', dateFrom: '', dateTo: '' });
@@ -83,13 +83,25 @@ export default function App() {
     showToast('Event deleted.', 'success');
   };
 
+  const handleFreshStart = useCallback(() => {
+    if (!confirm('Clear the sample data and start with an empty history?')) return;
+    freshStart();
+    setExpandedId(null);
+    showToast('Fresh start! Add your first event.', 'success');
+  }, [freshStart, showToast]);
+
   const handleInstalled = useCallback(() => {
     showToast('App installed! You can now use it offline.', 'success');
   }, [showToast]);
 
   return (
     <>
-      <TopBar onNewEvent={openNewModal} onInstalled={handleInstalled} />
+      <TopBar
+        onNewEvent={openNewModal}
+        onInstalled={handleInstalled}
+        showFreshStart={isSample}
+        onFreshStart={handleFreshStart}
+      />
 
       <main id="app" role="main">
         <FiltersBar events={events} filters={filters} onChange={handleFilters} />
