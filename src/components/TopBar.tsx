@@ -5,7 +5,17 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
-export function TopBar({ onNewEvent, onInstalled }: { onNewEvent: () => void; onInstalled: () => void }) {
+export function TopBar({
+  onNewEvent,
+  onInstalled,
+  showFreshStart,
+  onFreshStart,
+}: {
+  onNewEvent: () => void;
+  onInstalled: () => void;
+  showFreshStart: boolean;
+  onFreshStart: () => void;
+}) {
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
@@ -40,6 +50,15 @@ export function TopBar({ onNewEvent, onInstalled }: { onNewEvent: () => void; on
       </a>
 
       <nav className="nav-actions" aria-label="Top actions">
+        {showFreshStart && (
+          <button
+            className="btn btn-ghost btn-sm"
+            onClick={onFreshStart}
+            aria-label="Clear the sample data and start with an empty history"
+          >
+            ✨ Fresh start
+          </button>
+        )}
         {installPrompt && (
           <button
             className="btn btn-ghost btn-sm"
