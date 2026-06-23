@@ -7,11 +7,13 @@ interface BeforeInstallPromptEvent extends Event {
 
 export function TopBar({
   onNewEvent,
+  onImport,
   onInstalled,
   showFreshStart,
   onFreshStart,
 }: {
   onNewEvent: () => void;
+  onImport: () => void;
   onInstalled: () => void;
   showFreshStart: boolean;
   onFreshStart: () => void;
@@ -68,6 +70,14 @@ export function TopBar({
             ⬇ Install
           </button>
         )}
+        <button
+          className="btn btn-ghost btn-sm"
+          onClick={onImport}
+          aria-label="Import events from 17Lands"
+          aria-haspopup="dialog"
+        >
+          ⬆ Import
+        </button>
         <button
           id="btn-new-event"
           className="btn btn-primary"
