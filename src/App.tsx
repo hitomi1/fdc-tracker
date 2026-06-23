@@ -7,6 +7,8 @@ import { TopBar } from './components/TopBar';
 import { FiltersBar } from './components/FiltersBar';
 import { EventList } from './components/EventList';
 import { EventModal } from './components/EventModal';
+import { ImportModal } from './components/ImportModal';
+import type { ParsedEvent } from './lib/import17lands';
 import { PerformanceTab } from './components/PerformanceTab';
 import { RewardsTab } from './components/RewardsTab';
 import { Toasts } from './components/Toasts';
@@ -18,7 +20,7 @@ const TABS: { id: Tab; label: string }[] = [
 ];
 
 export default function App() {
-  const { events, isSample, addEvent, updateEvent, deleteEvent, freshStart } = useEvents();
+  const { events, isSample, addEvent, addEvents, updateEvent, deleteEvent, freshStart } = useEvents();
   const { toasts, showToast } = useToasts();
 
   const [filters, setFilters] = useState<Filters>({ format: '', set: '', dateFrom: '', dateTo: '' });
@@ -26,6 +28,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('events');
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [newId, setNewId] = useState<string | null>(null);
 
@@ -76,6 +79,12 @@ export default function App() {
     closeModal();
   };
 
+  const handleImport = (parsed: ParsedEvent[]) => {
+    addEvents(parsed);
+    setImportOpen(false);
+    showToast(`Imported ${parsed.length} event${parsed.length === 1 ? '' : 's'}.`, 'success');
+  };
+
   const handleDelete = (id: string) => {
     if (!confirm('Delete this event? This cannot be undone.')) return;
     deleteEvent(id);
@@ -98,6 +107,7 @@ export default function App() {
     <>
       <TopBar
         onNewEvent={openNewModal}
+        onImport={() => setImportOpen(true)}
         onInstalled={handleInstalled}
         showFreshStart={isSample}
         onFreshStart={handleFreshStart}
@@ -143,6 +153,10 @@ export default function App() {
 
       {modalOpen && (
         <EventModal key={editingId ?? 'new'} editing={editing} onClose={closeModal} onSave={handleSave} />
+      )}
+
+      {importOpen && (
+        <ImportModal existing={events} onClose={() => setImportOpen(false)} onImport={handleImport} />
       )}
 
       <Toasts toasts={toasts} />

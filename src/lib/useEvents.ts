@@ -43,6 +43,15 @@ export function useEvents() {
     return newEv;
   }, [isSample]);
 
+  // Add several events at once (e.g. from a 17Lands import). Newest first.
+  const addEvents = useCallback((list: Omit<DraftEvent, 'id'>[]): DraftEvent[] => {
+    const newEvs: DraftEvent[] = list.map(data => ({ id: generateId(), ...data }));
+    if (!newEvs.length) return [];
+    setEvents(prev => (isSample ? [...newEvs] : [...newEvs, ...prev]));
+    setIsSample(false);
+    return newEvs;
+  }, [isSample]);
+
   const updateEvent = useCallback((id: string, data: Omit<DraftEvent, 'id'>) => {
     setEvents(prev => prev.map(ev => (ev.id === id ? { ...ev, ...data } : ev)));
     setIsSample(false);
@@ -59,5 +68,5 @@ export function useEvents() {
     setIsSample(false);
   }, []);
 
-  return { events, isSample, addEvent, updateEvent, deleteEvent, freshStart };
+  return { events, isSample, addEvent, addEvents, updateEvent, deleteEvent, freshStart };
 }
