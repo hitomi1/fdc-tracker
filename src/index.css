@@ -1364,3 +1364,171 @@ tr.notes-row .row-actions {
 }
 
 .row-new { animation: rowPulse 1.4s ease forwards; }
+
+/* ─── Guided tour (driver.js) — themed to match the dark UI ─────────────────── */
+/* Scoped under .fdc-tour (driver's popoverClass) so these win over driver.css
+   regardless of stylesheet load order. */
+.driver-popover.fdc-tour {
+  background: var(--bg-modal);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-modal);
+}
+.driver-popover.fdc-tour .driver-popover-title {
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+.driver-popover.fdc-tour .driver-popover-description {
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.driver-popover.fdc-tour .driver-popover-progress-text {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}
+.driver-popover.fdc-tour .driver-popover-navigation-btns button,
+.driver-popover.fdc-tour .driver-popover-close-btn {
+  background: var(--bg-input);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  text-shadow: none;
+  border: 1px solid var(--border);
+}
+.driver-popover.fdc-tour .driver-popover-navigation-btns button:hover {
+  background: var(--accent);
+  color: var(--bg-deep);
+}
+.driver-popover.fdc-tour .driver-popover-close-btn { color: var(--text-secondary); }
+/* Arrow tip colour follows the popover background on every side */
+.driver-popover.fdc-tour .driver-popover-arrow-side-left.driver-popover-arrow   { border-left-color: var(--bg-modal); }
+.driver-popover.fdc-tour .driver-popover-arrow-side-right.driver-popover-arrow  { border-right-color: var(--bg-modal); }
+.driver-popover.fdc-tour .driver-popover-arrow-side-top.driver-popover-arrow    { border-top-color: var(--bg-modal); }
+.driver-popover.fdc-tour .driver-popover-arrow-side-bottom.driver-popover-arrow { border-bottom-color: var(--bg-modal); }
+
+/* ============================================================
+   Auth: sign-in modal + account menu
+   ============================================================ */
+.modal.modal-narrow { max-width: 420px; }
+
+.auth-intro {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 0 0 16px;
+  text-align: center;
+}
+
+.btn-block { width: 100%; justify-content: center; }
+
+.btn-google {
+  width: 100%;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid var(--border);
+}
+.btn-google .g-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  color: #4285f4;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.auth-error {
+  color: #ff6b6b;
+  font-size: 0.8rem;
+  margin: 4px 0 12px;
+}
+.auth-notice {
+  color: var(--accent);
+  font-size: 0.8rem;
+  margin: 4px 0 12px;
+}
+
+.auth-switch {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin: 16px 0 0;
+}
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  text-decoration: underline;
+}
+
+/* Account button + dropdown */
+.account-wrap { position: relative; }
+.account-btn {
+  position: relative;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.sync-dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--bg-surface);
+  animation: fdc-pulse 1s ease-in-out infinite;
+}
+@keyframes fdc-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.account-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+.account-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 41;
+  min-width: 200px;
+  background: var(--bg-modal);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+.account-email {
+  font-size: 0.8rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.account-status {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin: 2px 0 10px;
+}
