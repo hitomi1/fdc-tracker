@@ -12,6 +12,14 @@ dist
 dist-ssr
 *.local
 
+# Agent skills (installed locally, not part of the app)
+.agents/
+
+# Claude Code local settings (personal permissions, not part of the app)
+.claude/settings.local.json
+# Local skill symlinks into the gitignored .agents/ dir (see skills-lock.json)
+.claude/skills/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -1,9 +1,11 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { DraftEvent, Filters, SortColumn, SortState, Tab } from './types';
 import { applyFilters, applySort } from './lib/events';
 import { useEvents } from './lib/useEvents';
 import { useToasts } from './lib/useToasts';
+import { useAuth } from './lib/useAuth';
 import { TopBar } from './components/TopBar';
+import { AuthModal } from './components/AuthModal';
 import { FiltersBar } from './components/FiltersBar';
 import { EventList } from './components/EventList';
 import { EventModal } from './components/EventModal';
@@ -12,6 +14,7 @@ import type { ParsedEvent } from './lib/import17lands';
 import { PerformanceTab } from './components/PerformanceTab';
 import { RewardsTab } from './components/RewardsTab';
 import { Toasts } from './components/Toasts';
+import { maybeAutoStartTour, startTour } from './lib/tour';
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'events', label: 'Event List' },
@@ -20,7 +23,8 @@ const TABS: { id: Tab; label: string }[] = [
 ];
 
 export default function App() {
-  const { events, isSample, addEvent, addEvents, updateEvent, deleteEvent, freshStart } = useEvents();
+  const auth = useAuth();
+  const { events, isSample, syncing, addEvent, addEvents, updateEvent, deleteEvent, freshStart } = useEvents(auth.user);
   const { toasts, showToast } = useToasts();
 
   const [filters, setFilters] = useState<Filters>({ format: '', set: '', dateFrom: '', dateTo: '' });
@@ -29,8 +33,12 @@ export default function App() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [newId, setNewId] = useState<string | null>(null);
+
+  // Auto-run the welcome tour the first time someone opens the app.
+  useEffect(() => { maybeAutoStartTour(); }, []);
 
   const filtered = useMemo(() => applyFilters(events, filters), [events, filters]);
   const filteredSorted = useMemo(() => applySort(filtered, sort), [filtered, sort]);
@@ -103,14 +111,25 @@ export default function App() {
     showToast('App installed! You can now use it offline.', 'success');
   }, [showToast]);
 
+  const handleSignOut = useCallback(async () => {
+    await auth.signOut();
+    showToast('Signed out. Your data stays on this device.', 'success');
+  }, [auth, showToast]);
+
   return (
     <>
       <TopBar
         onNewEvent={openNewModal}
         onImport={() => setImportOpen(true)}
+        onHelp={startTour}
         onInstalled={handleInstalled}
         showFreshStart={isSample}
         onFreshStart={handleFreshStart}
+        authEnabled={auth.enabled}
+        userEmail={auth.user?.email ?? null}
+        syncing={syncing}
+        onSignIn={() => setAuthOpen(true)}
+        onSignOut={handleSignOut}
       />
 
       <main id="app" role="main">
@@ -157,6 +176,17 @@ export default function App() {
 
       {importOpen && (
         <ImportModal existing={events} onClose={() => setImportOpen(false)} onImport={handleImport} />
+      )}
+
+      {authOpen && (
+        <AuthModal
+          auth={auth}
+          onClose={() => setAuthOpen(false)}
+          onSignedIn={() => {
+            setAuthOpen(false);
+            showToast('Signed in! Your history is now synced.', 'success');
+          }}
+        />
       )}
 
       <Toasts toasts={toasts} />
