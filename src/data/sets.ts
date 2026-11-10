@@ -9,6 +9,8 @@ export interface MtgSet {
 
 export const SETS_DATA: MtgSet[] = [
   // ── 2026 ──────────────────────────────────────────────────────────────────
+  { code: 'TRK', name: 'Star Trek'},
+  { code: 'FRA', name: 'Reality Fracture'},
   { code: 'HOB', name: 'The Hobbit'},
   { code: 'MSH', name: 'Marvel Super Heroes' },
   { code: 'SOS', name: 'Secrets of Strixhaven' },
